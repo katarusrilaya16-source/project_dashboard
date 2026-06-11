@@ -1,18 +1,29 @@
 import streamlit as st
 import sqlite3
 
-# Database Connection
+
 conn = sqlite3.connect("users.db", check_same_thread=False)
 c = conn.cursor()
 
-# Session State
+c.execute("""
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+)
+""")
+
+conn.commit()
+
+
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 
 if "user_email" not in st.session_state:
     st.session_state.user_email = ""
 
-# ---------------- LOGIN PAGE ---------------- #
+
 
 if not st.session_state.logged_in:
 
@@ -45,7 +56,6 @@ if not st.session_state.logged_in:
             else:
                 st.error("Enter Email and Password")
 
-# ---------------- DASHBOARD ---------------- #
 
 else:
 
